@@ -1,0 +1,85 @@
+{
+    "_comment": "2.2 Check data for different coutries",
+    "plantation_dataset_version_country":
+    [
+        "Argentina", "Australia", "Brazil", 
+        "Cambodia", "Cameroon", "Chile", 
+        "China", "Colombia", "Costa Rica", 
+        "Democratic Republic of the Congo", "Ecuador", "Gabon", 
+        "Ghana", "Guatemala", "Honduras", 
+        "India", "Indonesia", "Côte d\"Ivoire", 
+        "Japan", "Kenya", "Liberia", 
+        "Malawi", "Malaysia", "México", 
+        "Myanmar", "Nepal", "New Zealand", 
+        "Nicaragua", "Nigeria", "Pakistan", 
+        "Panama", "Papua New Guinea", "Peru", 
+        "Philippines", "Rwanda", "Solomon Islands", 
+        "South Africa", "South Korea", "Sri Lanka", 
+        "Thailand", "Uruguay", "United States", 
+        "Venezuela", "Vietnam","Åland", 
+        "Albania", "Andorra", "Austria", 
+        "Belarus", "Belgium", "Bosnia and Herzegovina", 
+        "Bulgaria", "Croatia", "Czechia", 
+        "Denmark", "Estonia", "Faroe Islands", 
+        "Finland", "France", "Germany", 
+        "Greece", "Guernsey", "Hungary", 
+        "Iceland", "Ireland", "Isle of Man", 
+        "Italy", "Jersey", "Kosovo", 
+        "Latvia", "Liechtenstein", "Lithuania", 
+        "Luxembourg", "Malta", "Moldova", 
+        "Monaco", "Montenegro", "Netherlands", 
+        "North Macedonia", "Norway", "Poland", 
+        "Portugal", "Romania", "San Marino", 
+        "Serbia", "Slovakia", "Slovenia", 
+        "Spain", "Svalbard and Jan Mayen", "Sweden", 
+        "Switzerland", "Ukraine", "United Kingdom", 
+        "Vatican City"
+    ],
+
+    "MapBiomas_dataset_version_country":
+    [
+        "Argentina","Bolivia","Brazil",
+        "Chile","Colombia","Ecuador",
+        "French Guiana","Guyana","Paraguay",
+        "Peru","Suriname","Uruguay",
+        "Venezuela","Indonesia"
+    ],
+
+    "Rapeseed_dataset_version_country":
+    [
+        "Albania","Austria","Bulgaria",
+        "Denmark","Belarus","Estonia",
+        "Faroe Islands","Finland",
+        "France","Germany","Bosnia and Herzegovina",
+        "Greece","Hungary","Croatia",
+        "Iceland","Ireland","Italy",
+        "Latvia","Lithuania","Malta",
+        "Moldova","Netherlands","North Macedonia",
+        "Norway","Czechia","Poland",
+        "Portugal","Romania","Slovenia",
+        "Slovakia","Spain","Sweden",
+        "Switzerland","United Kingdom","Ukraine",
+        "Belgium","Luxembourg","Serbia and Montenegro",
+        "Serbia","Montenegro","Åland",
+        "Andorra","Guernsey","Isle of Man",
+        "Jersey","Kosovo","Liechtenstein",
+        "Monaco","San Marino","Svalbard and Jan Mayen",
+        "Vatican City","Turkey","United States",
+        "Canada","Chile"
+    ],
+
+    "Rice_dataset_version_country":
+    [
+        "Brunei","Myanmar","Indonesia",
+        "Cambodia","Laos","Malaysia",
+        "Philippines","Timor-Leste","Singapore",
+        "Thailand","Vietnam","China",
+        "Japan","North Korea","South Korea",
+        "Taiwan","India"
+    ],
+
+    "Global_oilpalm_and_Coconut_not_in":
+    [
+        "Canada", "Russia", "United States",
+        "Romania", "Croatia", "Japan"] 
+}
