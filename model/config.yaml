@@ -1,0 +1,164 @@
+# ==============================================================================
+# DeDuCE Model Configuration File
+# ==============================================================================
+# This file centralizes all parameters for the DeDuCE model pipeline.
+#
+# INSTRUCTIONS:
+# 1. Update the `base_dir` to the absolute path of your main project folder.
+#    All other file paths are relative to this base directory.
+# 2. Adjust analysis years, model parameters, and GEE asset versions as needed.
+# ==============================================================================
+
+project:
+  name: "DeDuCE (Deforestation Driver and Carbon Emission)"
+  versioning:
+    dataset_version: 1
+    gee_data_version: 0
+    python_script_version: 1
+    year_range_str: '(2001-2022)'
+
+# ------------------------------------------------------------------------------
+# FILE PATHS
+# ------------------------------------------------------------------------------
+# All paths are relative to the `base_dir`.
+paths:
+  base_dir: "/home/chandra/backup/Chalmers/" # IMPORTANT: UPDATE THIS TO YOUR PROJECT'S ROOT DIRECTORY
+  
+  inputs:
+    # Shapefiles and boundary data
+    gadm_boundaries_csv: "GADM_Boundaries.csv"
+    gadm_shapefile_national: "Other_datasets/GADM/GADM_dissolved_ADM0.shp"
+    gadm_shapefile_brazil_subnational: "Other_datasets/GADM_Brazil/gadm41_BRA_2.shp"
+    
+    # Statistical data from FAO, IBGE, etc.
+    fao_landuse: "FAOSTATS/Inputs_LandUse_E_All_Data_(Normalized).csv"
+    fao_production: "FAOSTATS/Production_Crops_Livestock_E_All_Data_(Normalized).csv"
+    global_fra: "FAOSTATS/fra-forestCharacteristics.csv"
+    ibge_dataset_dir: "IBGE dataset"
+    
+    # Gross land loss data (Li et al.)
+    gross_loss_global: "Other_datasets/Li_et_al_2017_Gross_cropland_grassland_changes_2001-2022.xlsx"
+    gross_loss_brazil: "Other_datasets/Li_et_al_2017_Brazil_Gross_cropland_grassland_changes_2001-2022.xlsx"
+    
+    # Lookup and supplementary data
+    supplementary_data_excel: "DeDuCE v{dataset_version}.{gee_data_version}.{python_script_version} {year_range_str}/Supplementary_data-DeDuCE v1.xlsx"
+    conversion_matrix_excel: "Other_datasets/Conversion factor Li et al 2017.xlsx"
+
+  outputs:
+    # Directory where GEE exports are saved (input for statistical script)
+    gee_exports_dir: "DeDuCE v{dataset_version}.{gee_data_version}.{python_script_version} {year_range_str}/DeDuCE_dataset_GEE"
+    
+    # Directory for final results from the statistical script
+    final_results_dir: "DeDuCE v{dataset_version}.{gee_data_version}.{python_script_version} {year_range_str}/Generated_results"
+    
+    # Directory for gross loss analysis results
+    gross_loss_output_dir: "Other_datasets/Generated_Results/"
+
+# ------------------------------------------------------------------------------
+# MODEL PARAMETERS
+# ------------------------------------------------------------------------------
+parameters:
+  general:
+    start_year: 2001
+    end_year: 2022
+
+  spatial_attribution:
+    forest_threshold: 25        # Minimum tree cover % to be considered forest
+    plantation_threshold_year: 2000 # Year to distinguish old vs. new plantations
+
+  statistical_attribution:
+    fao_landuse_end_year: 2021
+    fao_production_end_year: 2021
+    ibge_production_end_year: 2022
+    lag_period: 3               # Lag between forest loss and established agriculture stats
+    amortization_period: 5      # Period for amortizing deforestation and carbon footprints
+
+  gross_loss_analysis:
+    region_id_column: 'COUNTRY' # Shapefile column for national analysis
+    output_filename_prefix: 'DeDuCE_Gross_Cropland_Grassland_Changes'
+
+# ------------------------------------------------------------------------------
+# CLASSIFICATION CODES
+# ------------------------------------------------------------------------------
+classification_codes:
+  # Categories that are re-attributed to specific land uses
+  unclassified_inputs:
+    hansen_unattributed: [1]
+    mapbiomas_farming: [3050]
+    mapbiomas_mosaic: [3100]
+    dominant_agriculture: [3000]
+    dominant_forestry: [500]
+    broad_lu_undefined: [9000]
+
+  # Intermediate classes used during statistical attribution
+  attribution_targets:
+    mapbiomas_farmingmosaic_cropland: [3150]
+    mapbiomas_farmingmosaic_pasture: [4000]
+    mapbiomas_farmingmosaic_plantation: [5000]
+    dominant_cropland: [3151]
+    dominant_pasture: [4001]
+    dominant_plantation: [6501]
+    hansen_cropland: [3152]
+    hansen_pasture: [4002]
+    hansen_plantation: [6502]
+    globalplantation_treecrop: [3801]
+
+  # Broad land use categories for aggregation
+  broad_land_use:
+    cropland: [3150, 3151, 3152, 3200, 3201, 3800, 3801]
+    cropland_limited_priority: [3152, 3151, 3201, 3150, 3200, 3800, 3801]
+    pasture: [4000, 4001, 4002]
+    plantation: [5000, 6501, 6502]
+
+  # Redundant classes that are merged into others
+  redundant:
+    agriculture: 5182
+    plantation: 5181
+    
+# ------------------------------------------------------------------------------
+# GOOGLE EARTH ENGINE (GEE) ASSET PATHS
+# ------------------------------------------------------------------------------
+gee_assets:
+  boundaries:
+    gadm_admin: "projects/lu-chandrakant/assets/GADM_dissolved"
+  
+  forest_cover:
+    hansen_forest_change: "UMD/hansen/global_forest_change_2022_v1_10"
+  
+  commodities_and_land_use:
+    plantation_du: "projects/lu-chandrakant/assets/Plantation_new/"
+    mapbiomas_collections:
+      Amazon: 'projects/mapbiomas-raisg/public/collection5/mapbiomas_raisg_panamazonia_collection5_integration_v1'
+      Argentina: 'projects/mapbiomas-public/assets/argentina/collection1/mapbiomas_argentina_collection1_integration_v1'
+      Brazil: 'projects/mapbiomas-workspace/public/collection8/mapbiomas_collection80_integration_v1'
+      # ... Add all other MapBiomas collections here ...
+    soy_glad: 'projects/glad/soy_annual_SA'
+    cocoa_kalischek: 'projects/ee-nk-cocoa/assets/cocoa_map_threshold_065'
+    # ... Add all other commodity-specific asset paths here ...
+
+  drivers_and_management:
+    forest_fire_tyukavina: 'users/sashatyu/2001-2022_fire_forest_loss'
+    dominant_driver_curtis: 'projects/lu-chandrakant/assets/Dominant_driver/Dominant_driver_2001_2022'
+    forest_management_lesiv: "projects/lu-chandrakant/assets/Forest_Management/FML_v3-2_with-colorbar"
+
+  carbon_and_ancillary:
+    agb_harris:
+      - 'projects/lu2-chandrakant/assets/Carbon'
+      - 'projects/lu3-chandrakant/assets/Carbon'
+    soc_stock_soilgrids: "projects/soilgrids-isric/ocs_mean"
+    # ... Add all other carbon and ancillary asset paths here ...
+    peatland_gfw: "projects/lu-chandrakant/assets/Global_Peatlands"
+
+# ------------------------------------------------------------------------------
+# REGIONAL SETTINGS
+# ------------------------------------------------------------------------------
+# For logic that varies by country or region
+regional_settings:
+  subnational_countries: ['Brazil'] # Countries with sub-national statistical analysis
+  
+  # Lists of countries where specific GEE datasets are applicable
+  country_lists:
+    plantation_du: ['Argentina', 'Australia', 'Brazil', 'Cambodia', 'Cameroon', 'Chile', 'China'] # Truncated for brevity
+    mapbiomas: ['Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'Indonesia'] # Truncated for brevity
+    rapeseed_han: ['Albania', 'Austria', 'Bulgaria', 'Denmark', 'Belarus', 'Canada', 'United States'] # Truncated for brevity
+    # ... Add other country lists here ...
